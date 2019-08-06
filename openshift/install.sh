@@ -18,10 +18,17 @@ oc new-app carma-vip-adaptor:latest
 echo "exposing..."
 oc expose svc/carma-vip-adaptor
 
-echo "starting app..."
-sleep 5
-oc get routes
-APP=`oc get routes | grep carma-vip-adaptor | cut -f 4 -d ' '`
-curl $APP/ping | json_pp 
+echo "init environment variables with placeholders..."
+oc set env dc/carma-vip-adaptor API_USERNAME=change-me
+oc set env dc/carma-vip-adaptor API_PASSWORD=change-me
+oc set env dc/carma-vip-adaptor ADFS_URL=change-me
+oc set env dc/carma-vip-adaptor CARMA_CLIENT_ID=change-me
+oc set env dc/carma-vip-adaptor CARMA_CLIENT_SECRET=change-me
+oc set env dc/carma-vip-adaptor CARMA_RESOURCE=change-me
+oc set env dc/carma-vip-adaptor CARMA_USERNAME=change-me
+oc set env dc/carma-vip-adaptor CARMA_PASSWORD=change-me
+oc set env dc/carma-vip-adaptor CARMA_URL=change-me
 
-echo ""
+echo "starting app..."
+sleep 15
+./ping.sh
